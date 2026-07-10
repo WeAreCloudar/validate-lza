@@ -1,0 +1,51 @@
+---
+# Creates releases with a pull request and attaches artifacts
+on:
+  workflow_run:
+    workflows: [pr-checks]
+    types: [completed]
+    branches: [main]
+  workflow_dispatch: {}
+
+name: release-please
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release-please:
+    # Always run when triggered manually
+    # Otherwise only for non-template repositories with successfull checks
+    # We do not run for the template repository, because that would change the starting version number
+    if: >-
+      github.event.workflow_dispatch ||
+      ( !github.event.repository.is_template && github.event.workflow_run.conclusion == 'success')
+    runs-on: ubuntu-latest
+    steps:
+      - id: generate-token
+        uses: actions/create-github-app-token@v3
+        with:
+          client-id: ${{ vars.GA_RELEASE_PLEASE_CLIENT_ID }}
+          private-key: ${{ secrets.GA_RELEASE_PLEASE_PRIVATE_KEY }}
+      - uses: googleapis/release-please-action@v5
+        id: release
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+      - uses: actions/checkout@v7
+        if: ${{ steps.release.outputs.release_created }}
+        with:
+          token: ${{ steps.generate-token.outputs.token }}
+      - name: tag major and minor versions
+        if: ${{ steps.release.outputs.release_created }}
+        run: |
+          git config user.name '${{ steps.generate-token.outputs.app-slug }}[bot]'
+          git config user.email '${{ steps.generate-token.outputs.app-slug }}[bot]@users.noreply.github.com'
+          git tag -d v${{ steps.release.outputs.major }} || true
+          git tag -d v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git push origin :v${{ steps.release.outputs.major }} || true
+          git push origin :v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} || true
+          git tag -a v${{ steps.release.outputs.major }} -m "Release v${{ steps.release.outputs.major }}"
+          git tag -a v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }} -m "Release v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}"
+          git push origin v${{ steps.release.outputs.major }}
+          git push origin v${{ steps.release.outputs.major }}.${{ steps.release.outputs.minor }}

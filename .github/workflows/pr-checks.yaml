@@ -1,0 +1,16 @@
+---
+name: pr-checks
+on: # yamllint disable-line rule:truthy
+  push:
+    branches: [main]  # new commits on these branches always trigger
+  pull_request:  # for other branches we only trigger on a pull request
+jobs:
+  pre-commit:
+    runs-on: ubuntu-latest
+    env:
+      # there is no git config (email) in an action, this will make pre-commit skip it.
+      SKIP: check-git-config-email
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-python@v6
+      - uses: pre-commit/action@v3.0.1  # this runs all checks and includes caching

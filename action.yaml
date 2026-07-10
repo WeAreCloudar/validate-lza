@@ -1,0 +1,12 @@
+name: Custom GitHub action
+description: Adjust your custom GitHub action here
+author: Cloudar
+branding:
+  icon: cloud
+  color: gray-dark
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check out repository code
+      uses: actions/checkout@v7

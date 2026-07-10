@@ -1,0 +1,19 @@
+[project]
+name = "validate-lza"
+version = "0.1.0"
+description = "Pre-commit hooks to validate AWS Landing Zone Accelerator config files against a pinned upstream LZA schema"
+requires-python = ">=3.9"
+dependencies = ["check-jsonschema>=0.27"]
+
+[project.scripts]
+validate-lza = "validate_lza.cli:main"
+
+[project.optional-dependencies]
+test = ["pytest"]
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]

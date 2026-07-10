@@ -32,3 +32,9 @@ repos:
     hooks:
       - id: check-github-workflows
       - id: check-github-actions
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.15.21
+    hooks:
+      - id: ruff-check
+        args: [--fix]
+      - id: ruff-format

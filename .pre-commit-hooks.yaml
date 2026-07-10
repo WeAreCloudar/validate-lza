@@ -1,0 +1,55 @@
+- id: validate-lza-global-config
+  name: validate-lza (global-config.yaml)
+  description: Validate global-config.yaml against the upstream LZA schema for --lza-version
+  entry: validate-lza --config-type global-config
+  language: python
+  files: (^|/)global-config\.yaml$
+
+- id: validate-lza-accounts-config
+  name: validate-lza (accounts-config.yaml)
+  description: Validate accounts-config.yaml against the upstream LZA schema for --lza-version
+  entry: validate-lza --config-type accounts-config
+  language: python
+  files: (^|/)accounts-config\.yaml$
+
+- id: validate-lza-customizations-config
+  name: validate-lza (customizations-config.yaml)
+  description: Validate customizations-config.yaml against the upstream LZA schema for --lza-version
+  entry: validate-lza --config-type customizations-config
+  language: python
+  files: (^|/)customizations-config\.yaml$
+
+- id: validate-lza-iam-config
+  name: validate-lza (iam-config.yaml)
+  description: Validate iam-config.yaml against the upstream LZA schema for --lza-version
+  entry: validate-lza --config-type iam-config
+  language: python
+  files: (^|/)iam-config\.yaml$
+
+- id: validate-lza-network-config
+  name: validate-lza (network-config.yaml)
+  description: Validate network-config.yaml against the upstream LZA schema for --lza-version
+  entry: validate-lza --config-type network-config
+  language: python
+  files: (^|/)network-config\.yaml$
+
+- id: validate-lza-organization-config
+  name: validate-lza (organization-config.yaml)
+  description: Validate organization-config.yaml against the upstream LZA schema for --lza-version
+  entry: validate-lza --config-type organization-config
+  language: python
+  files: (^|/)organization-config\.yaml$
+
+- id: validate-lza-security-config
+  name: validate-lza (security-config.yaml)
+  description: Validate security-config.yaml against the upstream LZA schema for --lza-version
+  entry: validate-lza --config-type security-config
+  language: python
+  files: (^|/)security-config\.yaml$
+
+- id: validate-lza-replacements-config
+  name: validate-lza (replacements-config.yaml)
+  description: Validate replacements-config.yaml against the upstream LZA schema for --lza-version
+  entry: validate-lza --config-type replacements-config
+  language: python
+  files: (^|/)replacements-config\.yaml$

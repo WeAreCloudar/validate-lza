@@ -1,0 +1,107 @@
+homeRegion: eu-west-1
+enabledRegions:
+  - eu-west-1
+  - us-east-1
+  - us-east-2
+useV2Stacks: true
+managementAccountAccessRole: AWSControlTowerExecution
+cloudwatchLogRetentionInDays: 90
+cdkOptions:
+  centralizeBuckets: true
+  useManagementAccessRole: true
+terminationProtection: true
+enableOptInRegions: false
+controlTower:
+  enable: true
+  # CT-native detective guardrails restoring parity with the previous landing zone for
+  # the Workloads OUs. NOTE: these are legacy AWS-GR_ guardrails (AWS is migrating these
+  # to the control catalog); the equivalent awsConfig.ruleSets in security-config.yaml are
+  # the durable fallback. If the ControlTower pipeline stage errors on a specific
+  # identifier (deprecated/already-enabled), remove that entry and rely on the Config rule.
+  controls:
+    - identifier: AWS-GR_ROOT_ACCOUNT_MFA_ENABLED
+      enable: true
+      deploymentTargets:
+        organizationalUnits:
+          - Workloads/Acceptance
+          - Workloads/Production
+    - identifier: AWS-GR_RESTRICTED_SSH
+      enable: true
+      deploymentTargets:
+        organizationalUnits:
+          - Workloads/Acceptance
+          - Workloads/Production
+    - identifier: AWS-GR_RDS_INSTANCE_PUBLIC_ACCESS_CHECK
+      enable: true
+      deploymentTargets:
+        organizationalUnits:
+          - Workloads/Acceptance
+          - Workloads/Production
+    - identifier: AWS-GR_RDS_SNAPSHOTS_PUBLIC_PROHIBITED
+      enable: true
+      deploymentTargets:
+        organizationalUnits:
+          - Workloads/Acceptance
+          - Workloads/Production
+    - identifier: AWS-GR_RDS_STORAGE_ENCRYPTED
+      enable: true
+      deploymentTargets:
+        organizationalUnits:
+          - Workloads/Acceptance
+          - Workloads/Production
+    - identifier: AWS-GR_S3_BUCKET_PUBLIC_READ_PROHIBITED
+      enable: true
+      deploymentTargets:
+        organizationalUnits:
+          - Workloads/Acceptance
+          - Workloads/Production
+    - identifier: AWS-GR_S3_BUCKET_PUBLIC_WRITE_PROHIBITED
+      enable: true
+      deploymentTargets:
+        organizationalUnits:
+          - Workloads/Acceptance
+          - Workloads/Production
+logging:
+  account: LogArchive
+  cloudtrail:
+    enable: false
+    organizationTrail: false
+    organizationTrailSettings:
+      multiRegionTrail: true
+      globalServiceEvents: true
+      managementEvents: true
+      s3DataEvents: true
+      lambdaDataEvents: true
+      sendToCloudWatchLogs: true
+      apiErrorRateInsight: false
+      apiCallRateInsight: false
+    accountTrails: []
+    lifecycleRules: []
+  sessionManager:
+    sendToCloudWatchLogs: false
+    sendToS3: false
+    excludeRegions: []
+    excludeAccounts: []
+    lifecycleRules: []
+    attachPolicyToIamRoles: []
+  cloudwatchLogs:
+    encryption:
+      useCMK: false # use AWS-managed key, not a per-account/region CMK (issue #6)
+lambda:
+  encryption:
+    useCMK: false # use AWS-managed key, not a per-account/region CMK (issue #6)
+s3:
+  encryption:
+    createCMK: false # use SSE-S3 (AWS-managed), not a per-account/region CMK (issue #6)
+sqs:
+  encryption:
+    useCMK: false # use AWS-managed key, not a per-account/region CMK (issue #6)
+tags:
+  - key: monitor_site24x7
+    value: 'false'
+ssmParameters: []
+centralRootUserManagement:
+  enable: true
+  capabilities:
+    rootCredentialsManagement: true
+    allowRootSessions: false

@@ -12,12 +12,12 @@ jobs:
       SKIP: check-git-config-email
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
       - uses: pre-commit/action@v3.0.1  # this runs all checks and includes caching
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
-      - uses: actions/setup-python@v6
+      - uses: actions/setup-python@v7
       - run: pip install -e '.[test]'
       - run: pytest
